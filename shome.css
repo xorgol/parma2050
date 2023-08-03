@@ -2,7 +2,6 @@
 	margin-left: auto;
 	margin-right: auto;
 	font-family: sans-serif;
-	font-display: swap;
 }
 
 body {
@@ -53,6 +52,12 @@ code
 	font-family: "Fira Mono", monospace;
 	font-display: swap;
 	overflow-wrap: break-word;
+}
+
+blockquote {
+    max-width: 38rem;
+    background-color: #f4f4f4;
+    padding: 1em;
 }
 
 h1
@@ -109,6 +114,24 @@ figcaption {
 	text-align: center;
 }
 
+table {
+    max-width: 40rem;
+}
+
+tr {
+    padding-bottom: 1em;
+    border: solid 1px #000;
+}
+
+td {
+
+    border-bottom: solid 1px #000;
+}
+
+td:nth-child(2n) {
+    text-align: right;
+}
+
 audio {
 	display: block;
 	text-align: center;
@@ -141,6 +164,15 @@ video {
 .container ul {
 	padding-top: 2em;
 	margin-left: 0px;
+}
+
+.note {
+    color: #346;
+    background-color: #f4f4f4;
+    max-width: 33rem;
+    padding: 1em;
+    text-align: center;
+    border: solid 2px #000;
 }
 
 @media only screen and (max-width : 600px),
