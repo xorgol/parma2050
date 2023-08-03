@@ -36,7 +36,7 @@ li {
     padding: 0.1em;
 }
 
-ol > li, ol > li > ul > a {
+ol > li, ol > li > ul > a, li > ul > li:nth-child(1) {
     font-weight: 800;
 }
 
