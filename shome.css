@@ -131,6 +131,12 @@ figcaption {
     max-width: 20rem;
 }
 
+.return {
+    text-transform: uppercase;
+    font-size: 0.8em;
+    color: #666;
+}
+
 table {
     max-width: 40rem;
 }
@@ -239,10 +245,19 @@ only screen and (max-device-width : 450px){
         color:#eee
     }
 
+    .note {
+        border-color: #FFF;
+    }
+
     aside {
         max-width: 38rem;
         background-color: #346;
         padding: 1em;
+    }
+
+    aside > .return {
+        background-color: #346;
+        color: #cecece;
     }
 
     aside > h3 {
