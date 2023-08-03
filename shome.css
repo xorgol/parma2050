@@ -270,7 +270,7 @@ only screen and (max-device-width : 450px){
         padding-bottom: 1em;
     }
 
-    figure > * {
+    figure > *, figure {
         background-color: #346;
     }
 
