@@ -120,9 +120,12 @@ figure {
 	width: 100%;
 	margin-left: auto;
 	margin-right: auto;
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
 
 figcaption {
+    padding-top: 1em;
 	text-align: center;
     max-width: 30rem;
 }
@@ -276,6 +279,7 @@ only screen and (max-device-width : 450px){
 
     a {
         color: #7795d1;
+        background-color: #FFF0;
     }
 
     p {
