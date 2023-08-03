@@ -71,6 +71,10 @@ aside > figure {
     padding-bottom: 1em;
 }
 
+aside > figure:last-child {
+    border-bottom: none;
+}
+
 h1
 {
 	font-weight: 700;
