@@ -60,6 +60,17 @@ blockquote {
     padding: 1em;
 }
 
+aside {
+    max-width: 38rem;
+    background-color: #f4f4f4;
+    padding: 1em;
+}
+
+aside > figure {
+    border-bottom: solid 1px #000;
+    padding-bottom: 1em;
+}
+
 h1
 {
 	font-weight: 700;
@@ -88,6 +99,7 @@ h3
 	font-size: 20px;
 	padding-top: 4pt;
 	padding-bottom: 4pt;
+    max-width: 50rem;
 
 }
 
@@ -112,6 +124,11 @@ figure {
 
 figcaption {
 	text-align: center;
+    max-width: 30rem;
+}
+
+.small-img {
+    max-width: 20rem;
 }
 
 table {
@@ -208,4 +225,49 @@ only screen and (max-device-width : 450px){
 	li {
 		padding: 0.5em 0em 0em 0em;
 	}
+}
+
+
+@media (prefers-color-scheme: dark) {
+    * {
+        background-color: #000;
+        color:#eee;
+    }
+
+    .note, blockquote, blockquote > em {
+        background-color: #346;
+        color:#eee
+    }
+
+    aside {
+        max-width: 38rem;
+        background-color: #346;
+        padding: 1em;
+    }
+
+    aside > h3 {
+        background-color: #346;
+    }
+    
+    aside > figure {
+        border-bottom: solid 1px #FFF;
+        background-color: #346;
+        padding-bottom: 1em;
+    }
+
+    figure > * {
+        background-color: #346;
+    }
+
+    a {
+        color: #7795d1;
+    }
+
+    p {
+        font-weight: 500;
+    }
+
+
+
+
 }
