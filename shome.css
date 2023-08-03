@@ -1,23 +1,20 @@
 * {
-	padding: 0;
-	margin: 0;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
 	margin-left: auto;
 	margin-right: auto;
-	max-width: 90%;
-	font-family: 'Fira Sans', sans-serif;
+	font-family: sans-serif;
 	font-display: swap;
+}
+
+body {
+    margin: 0;
 }
 
 p
 {
 	font-weight: 400;
-	font-size: 19px;
-	line-height: 28px;
-	padding-top: 1em;
-	padding-bottom: 1em;
+	font-size: 1.2em;
+	line-height: 1.5em;
+    max-width: 40rem;
 }
 
 ul
@@ -26,13 +23,25 @@ ul
 	font-size: 19px;
 	line-height: 28px;
 	padding-left: 1em;
+    max-width: 40rem;
 }
 
-il 
-{
-	font-weight: 400;
-	font-size: 19px;
+ol {
+    padding-left: 2em;
+    max-width: 40rem;
+
 }
+
+li {
+    max-width: 40rem;
+    padding: 0.1em;
+}
+
+ol > li, ol > li > ul > a {
+    font-weight: 800;
+}
+
+
 
 code
 {
@@ -52,9 +61,11 @@ h1
 	font-size: 30px;
 	text-align: center;
 	padding-top: 6px;
+    padding-bottom: 6px;
+    margin-top: 0;
 	background-color: #346;
-	color: #fff;
-	width: 100%;
+	color: #FFF;
+
 }
 
 h2
@@ -63,6 +74,7 @@ h2
 	font-size: 30px;
 	padding-top: 4px;
 	padding-bottom: 4px;
+    max-width: 40rem;
 }
 
 h3
