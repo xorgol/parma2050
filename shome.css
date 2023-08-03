@@ -1,0 +1,167 @@
+* {
+	padding: 0;
+	margin: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 90%;
+	font-family: 'Fira Sans', sans-serif;
+	font-display: swap;
+}
+
+p
+{
+	font-weight: 400;
+	font-size: 19px;
+	line-height: 28px;
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+
+ul
+{
+	font-weight: 400;
+	font-size: 19px;
+	line-height: 28px;
+	padding-left: 1em;
+}
+
+il 
+{
+	font-weight: 400;
+	font-size: 19px;
+}
+
+code
+{
+	background-color: #eee;
+	border: 1px solid #999;
+	display: block;
+	padding: 20px;
+	margin-top: 1em;
+	font-family: "Fira Mono", monospace;
+	font-display: swap;
+	overflow-wrap: break-word;
+}
+
+h1
+{
+	font-weight: 700;
+	font-size: 30px;
+	text-align: center;
+	padding-top: 6px;
+	background-color: #346;
+	color: #fff;
+	width: 100%;
+}
+
+h2
+{
+	font-weight: 700;
+	font-size: 30px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+h3
+{
+	font-weight: 600;
+	font-size: 20px;
+	padding-top: 4pt;
+	padding-bottom: 4pt;
+
+}
+
+a
+{
+	color: #457;
+}
+
+img {
+	display: block;
+	max-width: 85%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+figure {
+	display: block;
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+figcaption {
+	text-align: center;
+}
+
+audio {
+	display: block;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+video {
+	display: block;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#profile {
+	width: 300px;
+	height: 320px;
+	margin-left: 0px;
+	padding:  2em 1em 2em 0em;
+}
+
+.container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	align-self: flex-start;
+}
+
+.container ul {
+	padding-top: 2em;
+	margin-left: 0px;
+}
+
+@media only screen and (max-width : 600px),
+only screen and (max-device-width : 600px){
+	*
+	{
+		max-width: 98%;
+	}
+
+	.container ul {
+		padding-top: 2em;
+		margin-left: 0px;
+	}
+}
+
+@media only screen and (max-width : 450px),
+only screen and (max-device-width : 450px){
+	*
+	{
+		max-width: 98%;
+	}
+
+	#profile {
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.container ul {
+		padding-top: 0em;
+		margin-left: 0px;
+	}
+
+	li {
+		padding: 0.5em 0em 0em 0em;
+	}
+}
