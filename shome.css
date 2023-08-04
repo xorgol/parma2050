@@ -145,7 +145,12 @@ figcaption {
 }
 
 table {
-    max-width: 40rem;
+    max-width: 60rem;
+}
+
+td > ul > li {
+	width: 30vw;
+	margin-left: 2em;
 }
 
 thead > * {
