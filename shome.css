@@ -295,8 +295,9 @@ only screen and (max-device-width : 450px){
         padding-bottom: 1em;
     }
 
-    figure > *, figure {
+    figure > *, figure, figcaption > table > thead > tr > td,  figcaption > table > tbody > tr > td, figcaption > table > thead > tr > td > sup{
         background-color: #346;
+		border: none;
     }
 
     a {
