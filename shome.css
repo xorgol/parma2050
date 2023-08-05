@@ -145,7 +145,7 @@ figcaption {
 .return {
     text-transform: uppercase;
     font-size: 0.8em;
-    color: #666;
+    color: #346;
 }
 
 table {
@@ -256,6 +256,10 @@ only screen and (max-device-width : 450px){
 	li {
 		padding: 0.5em 0em 0em 0em;
 	}
+
+	table {
+		max-width: 98vw;
+	}
 }
 
 
@@ -283,6 +287,7 @@ only screen and (max-device-width : 450px){
     aside > .return {
         background-color: #346;
         color: #cecece;
+		font-weight: 600;
     }
 
     aside > h3 {
