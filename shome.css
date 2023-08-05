@@ -40,6 +40,10 @@ ol > li, ol > li > ul > a, li > ul > li:nth-child(1) {
     font-weight: 800;
 }
 
+nav, footer {
+	padding: 1em;
+}
+
 
 
 code
