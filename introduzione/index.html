@@ -8,6 +8,10 @@
       Introduzione - Piano Urbanistico Generalizzato Parma 2050 - Sito non
       ufficiale!
     </title>
+    <!-- Leaflet JS & CSS -->
+    <link rel="stylesheet" href="../leaflet/leaflet.css" />
+    <script src="../leaflet/leaflet.js"></script>
+    <script src="../nav.js"></script>
   </head>
   <body>
     <nav>
@@ -1246,12 +1250,53 @@
           questo che stiamo parlando.
         </p>
         <hr />
-        <p class="note">
-          Nota del redattore: qui manca la rappresentazione dei limiti del
-          Territorio Urbanizzato. Invece della sola immagine sarà messa una
-          mappa dinamica embeddata, in modo da poter valutare non solo la forma
-          della città, ma anche dove si trovano questi limiti.
+        <h4>Limiti del Territorio Urbanizzato (TU)</h4>
+        <p>
+          <strong>Mappa Interattiva: Limiti del Territorio Urbanizzato (TU) al 2025</strong>. 
+          Questa elaborazione cartografica definisce l'estensione complessiva della città consolidata e dei nuclei frazionali di Parma (pari a <strong>49,68 Km²</strong>).
         </p>
+
+        <div id="map" role="img" aria-label="Mappa interattiva dei limiti del Territorio Urbanizzato di Parma" style="width: 100%; height: 600px; border: 2px solid #346; margin-top: 15px; margin-bottom: 15px;"></div>
+        
+        <button class="accessibility-btn" style="background-color: #346; color: white; border: none; padding: 8px 12px; font-size: 14px; cursor: pointer; border-radius: 4px; text-transform: uppercase;" onclick="toggleContrast()">Attiva/Disattiva Alto Contrasto Mappa</button>
+
+        <script>
+          // Real dimensions of the map image (A4 portrait page at 150 DPI)
+          var imgW = 1241;
+          var imgH = 1754;
+
+          // Initialize the Leaflet map with a simple coordinate system (pixels)
+          var map = L.map('map', {
+            crs: L.CRS.Simple,
+            minZoom: -3,
+            maxZoom: 1,
+            zoomSnap: 0.5,
+            zoomDelta: 0.5
+          });
+
+          // Set the map bounds based on the image size
+          var bounds = [[0, 0], [imgH, imgW]];
+          
+          // Load the image overlay
+          var imageOverlay = L.imageOverlay('limiti_territorio.png', bounds).addTo(map);
+
+          // Center and fit the image within the window bounds
+          map.fitBounds(bounds);
+          map.setMaxBounds(bounds);
+
+          // Function to toggle high contrast mode for visually impaired users
+          var contrastActive = false;
+          function toggleContrast() {
+            var imgEl = imageOverlay.getElement();
+            if (!contrastActive) {
+              imgEl.style.filter = "contrast(1.8) brightness(0.9) saturate(1.2)";
+              contrastActive = true;
+            } else {
+              imgEl.style.filter = "none";
+              contrastActive = false;
+            }
+          }
+        </script>
       </section>
       <section>
         <h2 id="struttura">

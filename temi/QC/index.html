@@ -10,10 +10,13 @@
       media="all"
     />
     <link rel="stylesheet" type="text/css" href="/shome.css" media="all" />
-    <title>
       Temi - Quadro Conoscitivo - Piano Urbanistico Generalizzato Parma 2050 -
       Sito non ufficiale!
     </title>
+    <!-- Leaflet JS & CSS -->
+    <link rel="stylesheet" href="../../leaflet/leaflet.css" />
+    <script src="../../leaflet/leaflet.js"></script>
+      <script src="../../nav.js"></script>
   </head>
   <body>
     <nav>
@@ -2920,13 +2923,36 @@
           Luoghi della città emersi durante le discussioni avute durante il
           confronto con i vari soggetti ai vari tavoli.
         </h3>
-        <iframe
-          width="100%"
-          height="450"
-          frameborder="0"
-          title="Felt Map"
-          src="https://felt.com/embed/map/Untitled-Map-au8MsNfjRXOZO1u5YavRKC?loc=44.81076,10.30445,12z"
-        ></iframe>
+        <div id="discussion-map" style="width: 100%; height: 450px; border: 2px solid #346; margin: 15px 0;"></div>
+        <script>
+          // Initialize map centered at Parma
+          var map = L.map('discussion-map').setView([44.8015, 10.3280], 12);
+
+          // Add OpenStreetMap tile layer
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(map);
+
+          // Add markers representing key locations of participation tables and discussions
+          var locations = [
+            { name: "Centro Storico (Town Hall)", coords: [44.8015, 10.3280] },
+            { name: "Campus Universitario (Research & Development)", coords: [44.7645, 10.3130] },
+            { name: "Ospedale Maggiore (Healthcare and Care)", coords: [44.8037, 10.3032] },
+            { name: "Parco Ducale (Green Spaces & Culture)", coords: [44.8073, 10.3204] },
+            { name: "Stazione FS (Mobility Hub)", coords: [44.8118, 10.3292] },
+            { name: "Chiozzola (Frazioni Listening Table)", coords: [44.8480, 10.3685] },
+            { name: "Vicofertile (Western Neighborhoods)", coords: [44.7950, 10.2520] },
+            { name: "Corcagnano (Southern Neighborhoods)", coords: [44.7350, 10.3200] },
+            { name: "San Prospero (Eastern Gate)", coords: [44.8010, 10.3950] }
+          ];
+
+          locations.forEach(function(loc) {
+            L.marker(loc.coords)
+              .addTo(map)
+              .bindPopup('<b>' + loc.name + '</b><br>Discussion & participation site.');
+          });
+        </script>
         <p class="note">
           Nota del redattore: nell'originale questa mappa mostrava come fondo i
           soli edifici, la posizione dei pallini è stata ricostruita quanto più

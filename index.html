@@ -1,30 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="shome.css" media="all" />
     <title>Parma 2050 - sito non ufficiale!</title>
+      <script src="../nav.js"></script>
   </head>
   <body>
+    <!-- <nav>
+      <div id="contents">
+        <ul>
+          <li><a href="#intro">Introduzione</a></li>
+          <li><a href="#indice">Indice</a></li>
+        </ul>
+      </div>
+    </nav> -->
     <main>
-      <h1>Parma 2050 - sito non ufficiale!</h1>
+      <h1 id="intro">Parma 2050 - sito non ufficiale!</h1>
       <p>
         Il sito ufficiale del Piano Urbanistico Generale è
-        <a href="https://www.parma2050.eu">www.parma2050.eu</a>.
+        <a href="https://web.archive.org/web/20250321040149/https://www.parma2050.eu/">www.parma2050.eu</a>.
       </p>
       <p>
-        Purtroppo ha grossi limiti di accessibilità, e in gran parte si limita a
-        riprodurre i PDF, addirittura
+        Purtroppo ha grossi limiti di accessibilità, e in gran parte si
+        limitava a riprodurre i PDF, addirittura
         <a
-          href="https://www.parma2050.eu/introduzione-approccio-metodologico-leggere-il-piano-pr050/"
+          href="https://web.archive.org/web/20241107100631/https://www.parma2050.eu/introduzione-approccio-metodologico-leggere-il-piano-pr050/"
           >come immagini sgranate</a
         >, del tutto inapprocciabile per chi ha problemi visivi. Per questo ho
         creato questa versione alternativa, che riproduce i contenuti dei PDF
         ufficiali sul web, senza dover scaricare file.
       </p>
+
       <p>
-        I PDF ufficiali sono disponibili
+        I PDF ufficiali <strong>erano</strong> disponibili
         <a
           href="https://ssl.comune.parma.it/RicercaAtti/Pages/Ricerca.aspx?tipo=DGC&anno=2023&numero=241"
           >sull'archivio degli atti</a
@@ -33,6 +43,28 @@
         gigabyte, decisamente infattibile per chi tenta la consultazione da
         cellulare. Temo che i cittadini con a disposizione solo il cellulare non
         siano così pochi.
+        <br />
+      </p>
+      <p class="update">
+        <strong>Ricontrollando nel 2025</strong>, l'indirizzo è cambiato, quello
+        che funziona è:
+        <a
+          href="https://atti.comune.parma.it/AttiVisualizzatore/visualizza/delibera/900362"
+          >https://atti.comune.parma.it/AttiVisualizzatore/visualizza/delibera/900362</a
+        >
+        <br />
+
+        Con la delibera
+        <a
+          href="https://atti.comune.parma.it/AttiVisualizzatore/download/delibera/3031307?fId=3043270"
+          >N. GC-94-2025 DEL 19/03/2025</a
+        >
+        il PUG è stato adottato. <br />La documentazione aggiornata dovrebbe
+        essere quella linkata in questo articolo:
+        <a
+          href="https://pianificazioneterritoriale.comune.parma.it/ADOZIONE-PUG-PR050.aspx"
+          >https://pianificazioneterritoriale.comune.parma.it/ADOZIONE-PUG-PR050.aspx</a
+        >
       </p>
 
       <p>
@@ -41,11 +73,8 @@
         all'utente di selezionare e manipolare quali dati sono visualizzati, e
         consentendo quindi giustapposizioni e confronti. Essendo il materiale
         messo a disposizione in raster mi sto limitando a georeferenziarlo con
-        <a href="https://qgis.org">QGIS</a> e renderlo disponibile
-        <a
-          href="https://felt.com/map/parma2050-raster-geolocalizzati-Bk62S59BmTDK9Ad29AHbKOhiD?loc=44.80772,10.36752,12.17z&share=1"
-          >su Felt.</a
-        >
+        <a href="https://qgis.org">QGIS</a> e renderlo disponibile sotto forma di
+        <a href="temi/#QCcarte">mappe Leaflet interattive su questo sito.</a>
       </p>
 
       <p>
@@ -89,7 +118,7 @@
         Credo quindi di non far nulla di male nel riprodurre questo materiale.
       </p>
 
-      <h2>Indice</h2>
+      <h2 id="indice">Indice</h2>
       <p>
         La conversione in sito web è iniziata il 2023-08-03. Ultimo
         aggiornamento il 2023-09-08. Il processo di conversione non è ancora
@@ -139,45 +168,75 @@
               <a href="temi/indagine">Indagine socio-economica e demografica</a
               >⚠
             </li>
-            <li>Bilancio dei servizi e dotazioni</li>
-            <li>Quadro Conoscitivo (QC) - Elaborazioni cartografiche</li>
+            <li><a href="temi/bilancio/">Bilancio dei servizi e dotazioni</a></li>
+            <li><a href="temi/#QCcarte">Quadro Conoscitivo (QC) - Elaborazioni cartografiche (Mappe)</a></li>
             <li>Microzonazione sismica</li>
             <li>Tavole dei Vincoli e Schede</li>
           </ul>
         </li>
         <li>
+          <a href="vision/"><strong>Vision e Obiettivi</strong></a>
           <ul>
-            <li>Vision</li>
-            <li>La Vision e gli Obiettivi del Piano</li>
+            <li><a href="vision/">La Vision e gli Obiettivi del Piano</a></li>
             <li>VS - Elaborazioni cartografiche</li>
           </ul>
         </li>
         <li>
+          <a href="scenari/"><strong>Scenari e Strategie</strong></a>
           <ul>
-            <li>Scenari</li>
-            <li>Strategie e Azioni</li>
-            <li>Scenario 1: "Alta capacità"</li>
-            <li>Scenario 2: "Città produttiva"</li>
-            <li>Scenario 3: "Ecocittà"</li>
-            <li>Scenario 4: "Città-Parco"</li>
-            <li>Scenario 5: "Living Parma"</li>
-            <li>Scenario 6: "Super Parma"</li>
-            <li>Scenario 7: "Natura espansiva"</li>
+            <li><a href="scenari/">Strategie e Azioni (E001)</a></li>
+            <li><a href="scenari/alta_capacita/">Scenario 1: "Alta capacità" (E002)</a></li>
+            <li><a href="scenari/productive_city/">Scenario 2: "Città produttiva" (E003)</a></li>
+            <li><a href="scenari/eco_city/">Scenario 3: "Ecocittà" (E004)</a></li>
+            <li><a href="scenari/citta_parco/">Scenario 4: "Città-Parco" (E005)</a></li>
+            <li><a href="scenari/living_parma/">Scenario 5: "Living" Parma (E006)</a></li>
+            <li><a href="scenari/superparma/">Scenario 6: "Super Parma" (E007)</a></li>
+            <li><a href="scenari/natura_espansiva/">Scenario 7: "Natura espansiva" (E008)</a></li>
           </ul>
         </li>
         <li>
+          <a href="atlante/"><strong>Atlante del Piano</strong></a>
           <ul>
-            <li>Atlante</li>
-            <li>Schemi di Assetto Strategico</li>
-            <li>Atlante - Strategia Operativa (Prima parte)</li>
-            <li>Atlante - Strategie Locali (Seconda parte)</li>
-            <li>Atlante - Geografie della Trasformazione (Terza parte)</li>
-            <li>Atlante - Progetti Strategici (Quarta parte)</li>
+            <li><a href="atlante/">Atlante - Strategia Operativa (Prima parte - G001)</a></li>
+            <li><a href="atlante/">Atlante - Strategie Locali (Seconda parte - G002)</a></li>
+            <li><a href="atlante/">Atlante - Geografie della Trasformazione (Terza parte - G003)</a></li>
+            <li><a href="atlante/">Atlante - Progetti Strategici (Quarta parte - G004)</a></li>
           </ul>
         </li>
         <li>
+          <a href="temi/"><strong>QC - Elaborazioni cartografiche (Mappe)</strong></a>
           <ul>
-            <li>Carta</li>
+            <li><a href="temi/territorio/">La città e il territorio (QC.TM.1.1)</a></li>
+            <li><a href="temi/tessuti/">Analisi storica dei tessuti (QC.TM.1.1.1)</a></li>
+            <li><a href="temi/censimento_edifici/">Censimento storico degli edifici (QC.TM.1.1.2)</a></li>
+            <li><a href="temi/mobilita/">La città e la mobilità (QC.TM.1.2)</a></li>
+            <li><a href="temi/agricoltura/">La città e l'agricoltura (QC.TM.1.3)</a></li>
+            <li><a href="temi/lavoro/">La città e il lavoro (QC.TM.1.4)</a></li>
+            <li><a href="temi/cultura/">La città e la cultura (QC.TM.1.5)</a></li>
+            <li><a href="temi/scuola/">La città e la scuola (QC.TM.1.6)</a></li>
+            <li>
+              Analisi fabbisogno scolastico:
+              <ul>
+                <li><a href="temi/scuola_pop/">Popolazione residente (QC.TM.1.6.1)</a></li>
+                <li><a href="temi/scuola_nido/">Concentrazione 0-3 anni (QC.TM.1.6.2)</a></li>
+                <li><a href="temi/scuola_materna/">Concentrazione 3-6 anni (QC.TM.1.6.3)</a></li>
+                <li><a href="temi/scuola_elementare/">Concentrazione 6-11 anni (QC.TM.1.6.4)</a></li>
+                <li><a href="temi/scuola_media/">Concentrazione 11-15 anni (QC.TM.1.6.5)</a></li>
+              </ul>
+            </li>
+            <li><a href="temi/sport/">La città e lo sport (QC.TM.1.7)</a></li>
+            <li><a href="temi/salute/">La città la salute e la cura (QC.TM.1.8)</a></li>
+            <li><a href="temi/verde/">La città e il verde (QC.TM.1.9)</a></li>
+            <li><a href="temi/comunita/">La città e la comunità (QC.TM.1.10)</a></li>
+            <li><a href="temi/casa/">La città e la casa (QC.TM.1.11)</a></li>
+            <li><a href="temi/sostenibilita/">La città e la sostenibilità (QC.TM.1.12)</a></li>
+            <li><a href="temi/QC/">Segnalazioni e contributi del percorso partecipativo</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="disciplina/"><strong>Disciplina del Piano</strong></a>
+          <ul>
+            <li><a href="disciplina/metodologia.html">Elementi metodologici della Disciplina (DE)</a></li>
             <li>Disciplina del piano Legenda (D0)</li>
             <li>Disciplina elaborati cartografici (D1)</li>
             <li>Disciplina del centro storico (D2)</li>
@@ -189,17 +248,15 @@
           </ul>
         </li>
         <li>
+          <a href="valsat/"><strong>VALSAT (Valutazione Ambientale)</strong></a>
           <ul>
-            <li>
-              Valsat (Valutazione della Sostenibilità Ambientale e Territoriale)
-            </li>
-            <li>Documento di VALSAT (Prima parte)</li>
-            <li>Documento di VALSAT (Seconda parte)</li>
-            <li>Sintesi non tecnica</li>
-            <li>Studio di incidenza</li>
-            <li>Schede unità territoriali</li>
-            <li>Requisiti prestazionali</li>
-            <li>Elaborazioni cartografiche</li>
+            <li>Documento di VALSAT (Prima parte - L001)</li>
+            <li>Documento di VALSAT (Seconda parte - L002)</li>
+            <li><a href="valsat/sintesi.html">Sintesi non tecnica (L005)</a></li>
+            <li>Studio di incidenza (L006)</li>
+            <li>Schede unità territoriali (L004)</li>
+            <li>Requisiti prestazionali (L003)</li>
+            <li>Elaborazioni cartografiche (L007-L033)</li>
           </ul>
         </li>
         <li><a href="colophon.html">Colophon</a></li>

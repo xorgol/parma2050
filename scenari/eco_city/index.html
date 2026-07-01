@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="../../shome.css" media="all" />
+    <!-- Leaflet JS & CSS -->
+    <link rel="stylesheet" href="../../leaflet/leaflet.css" />
+    <script src="../../leaflet/leaflet.js"></script>
+    <script src="../../nav.js"></script>
+    <title>
+      Parma Eco-City (Scenario 3) - Piano Urbanistico Generale Parma 2050
+    </title>
+    <style>
+      #map {
+        width: 100%;
+        height: 600px;
+        background: #f8f9fa;
+        border: 2px solid #346;
+        margin-top: 15px;
+        margin-bottom: 15px;
+      }
+      .accessibility-btn {
+        background-color: #346;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        font-size: 14px;
+        cursor: pointer;
+        margin-top: 10px;
+        border-radius: 4px;
+        text-transform: uppercase;
+      }
+      .accessibility-btn:hover {
+        background-color: #234;
+      }
+      .map-controls-info {
+        background: #f4f4f4;
+        padding: 10px;
+        border-left: 4px solid #346;
+        font-size: 0.9em;
+        margin-bottom: 15px;
+      }
+      @media only screen and (max-width: 600px) {
+        #map {
+          height: 400px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p class="update">
+        Attenzione: questo non è il
+        <a href="https://www.parma2050.eu">sito ufficiale</a>, è una copia
+        realizzata per ovviare ai problemi di accessibilità dell'originale.
+        Questa pagina riproduce interattivamente la carta del
+        <a href="https://atti.comune.parma.it/AttiVisualizzatore/visualizza/delibera/900362"
+          >PDF ufficiale "E004_ST.SC.3.3 Scenario 3_Parma Eco-City"</a
+        >.
+      </p>
+
+      <h1>Parma 2050 - Piano Urbanistico Generale</h1>
+      <h2>Parma Eco-City (Scenario 3)</h2>
+      <p><strong>Elaborazione Cartografica Interattiva (Scala 1 : 25.000)</strong></p>
+    </header>
+
+    <main>
+      <section id="mappa-sezione">
+        <h3>Mappa Interattiva</h3>
+        <p>Azioni strategiche per la transizione energetica, la riduzione dell'impronta carbonica (footprint), l'albedo e la gestione sostenibile delle acque meteoriche.</p>
+        
+        <div class="map-controls-info">
+          <strong>Istruzioni per l'accessibilità da tastiera:</strong>
+          <ul>
+            <li>Usa i tasti <strong>+</strong> e <strong>-</strong> per ingrandire e rimpicciolire la mappa.</li>
+            <li>Usa le <strong>frecce direzionali</strong> per spostarti all'interno della mappa.</li>
+            <li>Puoi anche navigare e fare zoom trascinando con il mouse o effettuando il pinch-to-zoom da smartphone.</li>
+          </ul>
+        </div>
+
+        <div id="map" role="img" aria-label="Mappa interattiva per Parma Eco-City (Scenario 3). I dettagli testuali ed i elementi sono elencati nella legenda sottostante."></div>
+        
+        <button class="accessibility-btn" onclick="toggleContrast()">Attiva/Disattiva Alto Contrasto Mappa</button>
+      </section>
+
+      <hr />
+
+      <section id="dati-accessibili">
+        <h3>Legenda e Informazioni dello Scenario</h3>
+        <ul>
+                    <li><strong>Eco-District</strong>: quartieri pilota a forte impronta ecologica con incentivi volumetrici speciali per efficientamento sismico-energetico.</li>
+          <li><strong>Comunità Energetiche Rinnovabili</strong>: aree idonee per l'installazione di impianti solari e fotovoltaici diffusi.</li>
+          <li><strong>Permeabilizzazione suoli (Rooftop / RIFO)</strong>: interventi di de-impermeabilizzazione delle aree di sosta e dei cortili privati.</li>
+          <li><strong>Gestione sostenibile delle acque</strong>: vasche di laminazione, tetti verdi e sistemi di riutilizzo delle acque piovane.</li>
+        </ul>
+      </section>
+    </main>
+
+    <script>
+      // Real dimensions of the map image
+      var imgW = 6207;
+      var imgH = 7022;
+
+      // Initialize the Leaflet map with a simple coordinate system (pixels)
+      var map = L.map('map', {
+        crs: L.CRS.Simple,
+        minZoom: -4,
+        maxZoom: 2,
+        zoomSnap: 0.5,
+        zoomDelta: 0.5
+      });
+
+      // Set the map bounds based on the image size
+      var bounds = [[0, 0], [imgH, imgW]];
+      
+      // Load the image overlay
+      var imageOverlay = L.imageOverlay('eco_city.png', bounds).addTo(map);
+
+      // Center and fit the image within the window bounds
+      map.fitBounds(bounds);
+      map.setMaxBounds(bounds);
+
+      // Function to toggle high contrast mode for visually impaired users
+      var contrastActive = false;
+      function toggleContrast() {
+        var imgEl = imageOverlay.getElement();
+        if (!contrastActive) {
+          imgEl.style.filter = "contrast(1.8) brightness(0.9) saturate(1.2)";
+          contrastActive = true;
+        } else {
+          imgEl.style.filter = "none";
+          contrastActive = false;
+        }
+      }
+    </script>
+  </body>
+</html>
