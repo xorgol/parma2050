@@ -24,12 +24,12 @@
       #map {
         flex: 3;
         height: 100%;
-        background: #f8f9fa;
+        background: #f1f1f1;
       }
       #info-panel {
         flex: 1;
         height: 100%;
-        background: #f4f4f4;
+        background: #f8f9fa;
         border-left: 2px solid #346;
         padding: 15px;
         box-sizing: border-box;
@@ -45,21 +45,35 @@
         border-radius: 4px;
         text-transform: uppercase;
         margin-right: 10px;
+        margin-bottom: 10px;
+        display: inline-block;
       }
       .accessibility-btn:hover {
         background-color: #234;
       }
       .property-item {
-        margin-bottom: 8px;
-        font-size: 0.9em;
+        margin-bottom: 12px;
+        font-size: 0.95em;
+        line-height: 1.4;
       }
       .color-box {
         display: inline-block;
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         border: 1px solid #333;
         vertical-align: middle;
         margin-right: 8px;
+        border-radius: 3px;
+      }
+      .legend-list {
+        list-style: none;
+        padding-left: 0;
+        font-size: 0.85em;
+      }
+      .legend-list li {
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
       }
       @media only screen and (max-width: 800px) {
         #map-container {
@@ -83,13 +97,13 @@
         Attenzione: questo non è il
         <a href="https://www.parma2050.eu">sito ufficiale</a>, è una copia
         realizzata per ovviare ai problemi di accessibilità dell'originale.
-        Questa pagina estrae e sovrappone le geometrie vettoriali reali dei 7 scenari PUG.
+        Questa pagina riproduce le geometrie reali del PUG su una mappa interattiva.
       </p>
 
       <h1>Parma 2050 - Piano Urbanistico Generale</h1>
-      <h2>Mappa Vettoriale Interattiva degli Scenari SQUEA</h2>
+      <h2>Mappa Vettoriale Multistrato degli Scenari PUG</h2>
       <p>
-        Questa mappa consente di <strong>sovrapporre e confrontare vettorialmente</strong> le 7 macro-strategie della trasformazione. Usa il selettore in alto a destra sulla mappa per attivare/disattivare i singoli scenari ed il livello dello sfondo cartografico.
+        Questa mappa consente di sovrapporre e confrontare vettorialmente le 7 macro-strategie della trasformazione. Lo sfondo cartografico è basato esclusivamente su un <strong>disegno tecnico bare (neutro)</strong> del territorio, ripulito da scritte e cartigli informativi.
       </p>
     </header>
 
@@ -100,39 +114,60 @@
           
           <div id="info-panel">
             <h3>Dettagli Elemento</h3>
-            <p id="info-help">Passa il mouse sopra un elemento vettoriale della mappa per visualizzare i suoi dettagli prestazionali e cromatici.</p>
+            <p id="info-help">Passa il mouse sopra un elemento vettoriale colorato per leggerne il significato e la descrizione della corrispondente voce di legenda.</p>
+            
             <div id="info-content" style="display:none;">
               <div class="property-item">
-                <strong>Scenario:</strong> <span id="prop-scenario">-</span>
+                <strong>Scenario attivo:</strong>
+                <br /><span id="prop-scenario" style="font-weight: bold; color: #346;">-</span>
               </div>
               <div class="property-item">
-                <strong>Colore Riempimento:</strong> <span id="prop-fill-text">-</span> <span id="prop-fill-box" class="color-box"></span>
+                <strong>Significato Strategico:</strong>
+                <br /><span id="prop-meaning" style="font-weight: bold; color: #165; font-size: 1.05em;">-</span>
               </div>
               <div class="property-item">
-                <strong>Colore Tratto:</strong> <span id="prop-stroke-text">-</span> <span id="prop-stroke-box" class="color-box"></span>
+                <strong>Colore Riempimento:</strong>
+                <br /><span id="prop-fill-box" class="color-box"></span><span id="prop-fill-text">-</span>
+              </div>
+              <div class="property-item">
+                <strong>Colore Tratto:</strong>
+                <br /><span id="prop-stroke-box" class="color-box"></span><span id="prop-stroke-text">-</span>
               </div>
               <div class="property-item">
                 <strong>Spessore Linea:</strong> <span id="prop-weight">-</span> px
               </div>
             </div>
+
+            <hr />
+
+            <h4>Guida Colori Legenda</h4>
+            <ul class="legend-list">
+              <li><span class="color-box" style="background-color: #2b4;"></span> Verde: Infrastrutture Verdi e Parchi</li>
+              <li><span class="color-box" style="background-color: #296;"></span> Verde Scuro: Ambiti Agricoli / Transizione</li>
+              <li><span class="color-box" style="background-color: #93b;"></span> Viola: Trasporto Pubblico Veloce (TPL)</li>
+              <li><span class="color-box" style="background-color: #3388ff;"></span> Blu: Linee Ferroviarie e Idrografia</li>
+              <li><span class="color-box" style="background-color: #0c9;"></span> Celeste: Rete di Mobilità Dolce / Ciclabili</li>
+              <li><span class="color-box" style="background-color: #e43;"></span> Rosso: Aree di Trasformazione e Addensamento</li>
+              <li><span class="color-box" style="background-color: #d95;"></span> Arancione: Nodi Intermodali e Parcheggi</li>
+              <li><span class="color-box" style="background-color: #f77;"></span> Rosa: Aree Pedonali / Zone 30 in progetto</li>
+            </ul>
           </div>
         </div>
 
         <button class="accessibility-btn" onclick="toggleContrast()">Attiva/Disattiva Alto Contrasto Mappa</button>
-        <a href="index.html" class="accessibility-btn" style="text-decoration:none; display:inline-block; text-align:center;">Torna all'Indice Scenari</a>
+        <a href="index.html" class="accessibility-btn" style="text-decoration:none; text-align:center;">Torna all'Indice Scenari</a>
       </section>
     </main>
 
     <script>
-      // Load dimensions and initialize the map
+      // Load dimensions and initialize map
       fetch('map_dimensions.json')
         .then(response => response.json())
         .then(dims => {
           initializeMap(dims.width, dims.height);
         })
         .catch(err => {
-          // Fallback to standard A3 portrait points if JSON fails to load
-          initializeMap(842, 1191);
+          initializeMap(2979, 3370);
         });
 
       var map, layerControl, rasterOverlay, contrastActive = false;
@@ -153,14 +188,14 @@
         map.fitBounds(bounds);
         map.setMaxBounds(bounds);
 
-        // Load the Scenario 1 raster image as a toggleable background layer
-        // We stretch it to match the exact vector bounds for pixel-perfect alignment
-        rasterOverlay = L.imageOverlay('alta_capacita/alta_capacita.png', bounds);
+        // Load the bare cartographic background image
+        // It stretches exactly to the PDF coordinate bounds
+        rasterOverlay = L.imageOverlay('base_map.png', bounds);
         rasterOverlay.addTo(map);
 
         // Initialize layer controls
         var baseMaps = {
-          "Sfondo Cartografico (Scenario 1)": rasterOverlay
+          "Sfondo Cartografico Bare (Base)": rasterOverlay
         };
         var overlayMaps = {};
         
@@ -187,14 +222,14 @@
                   var strokeColor = feature.properties.stroke || feature.properties.fill || sc.color;
                   return {
                     fillColor: feature.properties.fill || sc.color,
-                    fillOpacity: feature.properties.fill ? 0.5 : 0,
+                    fillOpacity: feature.properties.fill ? 0.65 : 0,
                     color: strokeColor,
                     weight: feature.properties.weight || 2,
-                    opacity: 0.85
+                    opacity: 0.9
                   };
                 },
                 onEachFeature: function(feature, layer) {
-                  // Bind tooltip to display scenario name
+                  // Tooltip showing brief scenario label
                   layer.bindTooltip(feature.properties.scenario, { sticky: true });
 
                   // Handle hover events
@@ -202,8 +237,8 @@
                     mouseover: function(e) {
                       var activeLayer = e.target;
                       activeLayer.setStyle({
-                        fillOpacity: 0.85,
-                        weight: (feature.properties.weight || 2) + 2,
+                        fillOpacity: 0.9,
+                        weight: (feature.properties.weight || 2) + 2.5,
                         color: "#ffcc00"
                       });
                       activeLayer.bringToFront();
@@ -229,12 +264,52 @@
         });
       }
 
-      // Display properties in side panel
+      // Translates RGB color definitions into specific strategic meanings
+      function getColorExplanation(colorStr) {
+        if (!colorStr) return "Elemento generico della pianificazione";
+        var match = colorStr.match(/\d+/g);
+        if (!match) return "Elemento generico della pianificazione";
+        var r = parseInt(match[0]);
+        var g = parseInt(match[1]);
+        var b = parseInt(match[2]);
+
+        // Green shades
+        if (g > 110 && r < 140 && b < 140) {
+          if (g > 180) return "Infrastruttura Verde e corridoi ecologici portanti (Parchi storici, cinture verdi boschive rionali)";
+          return "Fasce di transizione ecologica rurale e agricola, corridoi di biodiversità (RiMaP, soglie esterne)";
+        }
+        // Blue/cyan shades
+        if (b > 140 && r < 130) {
+          if (r < 60 && g > 110) return "Rete della mobilità dolce e itinerari ciclopedonali territoriali (esistenti o in progetto)";
+          if (r > 70) return "Aree di pertinenza idraulica, corsi d'acqua tutelati e canali d'irrigazione della pianura";
+          return "Infrastrutture di mobilità su ferro (asse ferroviario storico, Pontremolese o TAV)";
+        }
+        // Red/orange/pink/yellow shades
+        if (r > 140 && b < 140) {
+          if (g > 120) return "Nodi di interscambio modale, stazioni TPL e aree di parcheggio d'interscambio periferico";
+          if (g < 80) return "Aree di Addensamento e Trasformazione Strategica (lotti dismessi, comparti industriali e produttivi da rigenerare)";
+          return "Qualificazione dello spazio pubblico locale (piazze di quartiere, aree a precedenza pedonale, Zone 30, strade scolastiche)";
+        }
+        // Purple/violet/magenta shades
+        if (r > 110 && b > 110 && g < 100) {
+          return "Dorsali strutturali del Trasporto Pubblico Locale (linee veloci TPL, corsie preferenziali bus)";
+        }
+        // Dark/neutral
+        if (r < 80 && g < 80 && b < 80) {
+          return "Linee ferroviarie o limiti confinari del Comune di Parma";
+        }
+        return "Elemento strategico di trasformazione urbana";
+      }
+
+      // Display properties and translation in side panel
       function showInfo(props) {
         document.getElementById("info-help").style.display = "none";
         document.getElementById("info-content").style.display = "block";
         
         document.getElementById("prop-scenario").textContent = props.scenario;
+        
+        var colorVal = props.fill || props.stroke;
+        document.getElementById("prop-meaning").textContent = getColorExplanation(colorVal);
         
         // Fill details
         if (props.fill) {
