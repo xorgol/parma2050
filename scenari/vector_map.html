@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="../shome.css" media="all" />
+    <!-- Leaflet JS & CSS -->
+    <link rel="stylesheet" href="../leaflet/leaflet.css" />
+    <script src="../leaflet/leaflet.js"></script>
+    <script src="../nav.js"></script>
+    <title>
+      Mappa Vettoriale Multistrato degli Scenari - Parma 2050
+    </title>
+    <style>
+      #map-container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 650px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        border: 2px solid #346;
+      }
+      #map {
+        flex: 3;
+        height: 100%;
+        background: #f8f9fa;
+      }
+      #info-panel {
+        flex: 1;
+        height: 100%;
+        background: #f4f4f4;
+        border-left: 2px solid #346;
+        padding: 15px;
+        box-sizing: border-box;
+        overflow-y: auto;
+      }
+      .accessibility-btn {
+        background-color: #346;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        font-size: 14px;
+        cursor: pointer;
+        border-radius: 4px;
+        text-transform: uppercase;
+        margin-right: 10px;
+      }
+      .accessibility-btn:hover {
+        background-color: #234;
+      }
+      .property-item {
+        margin-bottom: 8px;
+        font-size: 0.9em;
+      }
+      .color-box {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 1px solid #333;
+        vertical-align: middle;
+        margin-right: 8px;
+      }
+      @media only screen and (max-width: 800px) {
+        #map-container {
+          flex-direction: column;
+          height: 800px;
+        }
+        #info-panel {
+          border-left: none;
+          border-top: 2px solid #346;
+          flex: 1;
+        }
+        #map {
+          flex: 2;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p class="update">
+        Attenzione: questo non è il
+        <a href="https://www.parma2050.eu">sito ufficiale</a>, è una copia
+        realizzata per ovviare ai problemi di accessibilità dell'originale.
+        Questa pagina estrae e sovrappone le geometrie vettoriali reali dei 7 scenari PUG.
+      </p>
+
+      <h1>Parma 2050 - Piano Urbanistico Generale</h1>
+      <h2>Mappa Vettoriale Interattiva degli Scenari SQUEA</h2>
+      <p>
+        Questa mappa consente di <strong>sovrapporre e confrontare vettorialmente</strong> le 7 macro-strategie della trasformazione. Usa il selettore in alto a destra sulla mappa per attivare/disattivare i singoli scenari ed il livello dello sfondo cartografico.
+      </p>
+    </header>
+
+    <main>
+      <section>
+        <div id="map-container">
+          <div id="map" role="img" aria-label="Mappa vettoriale interattiva degli scenari di trasformazione di Parma. Le informazioni sugli elementi selezionati compaiono nel pannello laterale."></div>
+          
+          <div id="info-panel">
+            <h3>Dettagli Elemento</h3>
+            <p id="info-help">Passa il mouse sopra un elemento vettoriale della mappa per visualizzare i suoi dettagli prestazionali e cromatici.</p>
+            <div id="info-content" style="display:none;">
+              <div class="property-item">
+                <strong>Scenario:</strong> <span id="prop-scenario">-</span>
+              </div>
+              <div class="property-item">
+                <strong>Colore Riempimento:</strong> <span id="prop-fill-text">-</span> <span id="prop-fill-box" class="color-box"></span>
+              </div>
+              <div class="property-item">
+                <strong>Colore Tratto:</strong> <span id="prop-stroke-text">-</span> <span id="prop-stroke-box" class="color-box"></span>
+              </div>
+              <div class="property-item">
+                <strong>Spessore Linea:</strong> <span id="prop-weight">-</span> px
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="accessibility-btn" onclick="toggleContrast()">Attiva/Disattiva Alto Contrasto Mappa</button>
+        <a href="index.html" class="accessibility-btn" style="text-decoration:none; display:inline-block; text-align:center;">Torna all'Indice Scenari</a>
+      </section>
+    </main>
+
+    <script>
+      // Load dimensions and initialize the map
+      fetch('map_dimensions.json')
+        .then(response => response.json())
+        .then(dims => {
+          initializeMap(dims.width, dims.height);
+        })
+        .catch(err => {
+          // Fallback to standard A3 portrait points if JSON fails to load
+          initializeMap(842, 1191);
+        });
+
+      var map, layerControl, rasterOverlay, contrastActive = false;
+      var vectorLayers = {};
+
+      function initializeMap(width, height) {
+        // Initialize Leaflet map in simple coordinate mode (pixels/points)
+        map = L.map('map', {
+          crs: L.CRS.Simple,
+          minZoom: -3,
+          maxZoom: 2,
+          zoomSnap: 0.5,
+          zoomDelta: 0.5
+        });
+
+        // Set map bounds using the vector extraction coordinate space
+        var bounds = [[0, 0], [height, width]];
+        map.fitBounds(bounds);
+        map.setMaxBounds(bounds);
+
+        // Load the Scenario 1 raster image as a toggleable background layer
+        // We stretch it to match the exact vector bounds for pixel-perfect alignment
+        rasterOverlay = L.imageOverlay('alta_capacita/alta_capacita.png', bounds);
+        rasterOverlay.addTo(map);
+
+        // Initialize layer controls
+        var baseMaps = {
+          "Sfondo Cartografico (Scenario 1)": rasterOverlay
+        };
+        var overlayMaps = {};
+        
+        layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
+
+        // Scenario configurations
+        var scenarios = [
+          { name: "Scenario 1: Alta Capacità", path: "alta_capacita/vectors.geojson", color: "#346" },
+          { name: "Scenario 2: Productive City", path: "productive_city/vectors.geojson", color: "#d95" },
+          { name: "Scenario 3: Eco-City", path: "eco_city/vectors.geojson", color: "#296" },
+          { name: "Scenario 4: Città-Parco", path: "citta_parco/vectors.geojson", color: "#2b4" },
+          { name: "Scenario 5: Living Parma", path: "living_parma/vectors.geojson", color: "#e43" },
+          { name: "Scenario 6: SuperParma", path: "superparma/vectors.geojson", color: "#93b" },
+          { name: "Scenario 7: Natura Espansiva", path: "natura_espansiva/vectors.geojson", color: "#8a4" }
+        ];
+
+        // Fetch and load GeoJSON for each scenario
+        scenarios.forEach(sc => {
+          fetch(sc.path)
+            .then(res => res.json())
+            .then(data => {
+              var geoLayer = L.geoJSON(data, {
+                style: function(feature) {
+                  var strokeColor = feature.properties.stroke || feature.properties.fill || sc.color;
+                  return {
+                    fillColor: feature.properties.fill || sc.color,
+                    fillOpacity: feature.properties.fill ? 0.5 : 0,
+                    color: strokeColor,
+                    weight: feature.properties.weight || 2,
+                    opacity: 0.85
+                  };
+                },
+                onEachFeature: function(feature, layer) {
+                  // Bind tooltip to display scenario name
+                  layer.bindTooltip(feature.properties.scenario, { sticky: true });
+
+                  // Handle hover events
+                  layer.on({
+                    mouseover: function(e) {
+                      var activeLayer = e.target;
+                      activeLayer.setStyle({
+                        fillOpacity: 0.85,
+                        weight: (feature.properties.weight || 2) + 2,
+                        color: "#ffcc00"
+                      });
+                      activeLayer.bringToFront();
+                      showInfo(feature.properties);
+                    },
+                    mouseout: function(e) {
+                      geoLayer.resetStyle(e.target);
+                    }
+                  });
+                }
+              });
+
+              // Add layer to control overlays and map
+              layerControl.addOverlay(geoLayer, sc.name);
+              vectorLayers[sc.name] = geoLayer;
+              
+              // Enable Scenario 1 vectors by default
+              if (sc.name.includes("Scenario 1")) {
+                geoLayer.addTo(map);
+              }
+            })
+            .catch(err => console.error("Error loading GeoJSON layer:", err));
+        });
+      }
+
+      // Display properties in side panel
+      function showInfo(props) {
+        document.getElementById("info-help").style.display = "none";
+        document.getElementById("info-content").style.display = "block";
+        
+        document.getElementById("prop-scenario").textContent = props.scenario;
+        
+        // Fill details
+        if (props.fill) {
+          document.getElementById("prop-fill-text").textContent = props.fill;
+          document.getElementById("prop-fill-box").style.backgroundColor = props.fill;
+          document.getElementById("prop-fill-box").style.display = "inline-block";
+        } else {
+          document.getElementById("prop-fill-text").textContent = "Nessuno (Trasparente)";
+          document.getElementById("prop-fill-box").style.display = "none";
+        }
+
+        // Stroke details
+        var strokeVal = props.stroke || props.fill || "-";
+        document.getElementById("prop-stroke-text").textContent = strokeVal;
+        document.getElementById("prop-stroke-box").style.backgroundColor = strokeVal;
+        
+        document.getElementById("prop-weight").textContent = props.weight || "1";
+      }
+
+      // Toggle high contrast filter
+      function toggleContrast() {
+        var elements = document.querySelectorAll('.leaflet-image-layer');
+        if (!contrastActive) {
+          elements.forEach(el => el.style.filter = "contrast(1.8) brightness(0.9) saturate(1.2)");
+          contrastActive = true;
+        } else {
+          elements.forEach(el => el.style.filter = "none");
+          contrastActive = false;
+        }
+      }
+    </script>
+  </body>
+</html>
