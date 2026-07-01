@@ -12,17 +12,23 @@
       Mappa Vettoriale Multistrato degli Scenari - Parma 2050
     </title>
     <style>
+      body {
+        max-width: 98% !important;
+        margin: 0 auto !important;
+        padding: 15px !important;
+      }
       #map-container {
         display: flex;
         flex-direction: row;
         width: 100%;
-        height: 650px;
+        height: 80vh;
+        min-height: 700px;
         margin-top: 15px;
         margin-bottom: 15px;
         border: 2px solid #346;
       }
       #map {
-        flex: 3;
+        flex: 4;
         height: 100%;
         background: #f1f1f1;
       }
@@ -78,7 +84,7 @@
       @media only screen and (max-width: 800px) {
         #map-container {
           flex-direction: column;
-          height: 800px;
+          height: 90vh;
         }
         #info-panel {
           border-left: none;
@@ -86,7 +92,7 @@
           flex: 1;
         }
         #map {
-          flex: 2;
+          flex: 3;
         }
       }
     </style>
