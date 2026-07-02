@@ -11,14 +11,29 @@
     <title>
       Parma Alta Capacità (Scenario 1) - Piano Urbanistico Generale Parma 2050
     </title>
-    <style>
-      #map {
+        <style>
+      #map-container {
+        display: flex;
+        flex-direction: row;
         width: 100%;
         height: 600px;
-        background: #f8f9fa;
-        border: 2px solid #346;
         margin-top: 15px;
         margin-bottom: 15px;
+        border: 2px solid #346;
+      }
+      #map {
+        flex: 3;
+        height: 100%;
+        background: #f1f1f1;
+      }
+      #info-panel {
+        flex: 1;
+        height: 100%;
+        background: #f8f9fa;
+        border-left: 2px solid #346;
+        padding: 15px;
+        box-sizing: border-box;
+        overflow-y: auto;
       }
       .accessibility-btn {
         background-color: #346;
@@ -27,9 +42,11 @@
         padding: 8px 12px;
         font-size: 14px;
         cursor: pointer;
-        margin-top: 10px;
         border-radius: 4px;
         text-transform: uppercase;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        display: inline-block;
       }
       .accessibility-btn:hover {
         background-color: #234;
@@ -41,9 +58,32 @@
         font-size: 0.9em;
         margin-bottom: 15px;
       }
-      @media only screen and (max-width: 600px) {
+      .property-item {
+        margin-bottom: 12px;
+        font-size: 0.95em;
+        line-height: 1.4;
+      }
+      .color-box {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 1px solid #333;
+        vertical-align: middle;
+        margin-right: 8px;
+        border-radius: 3px;
+      }
+      @media only screen and (max-width: 800px) {
+        #map-container {
+          flex-direction: column;
+          height: 800px;
+        }
+        #info-panel {
+          border-left: none;
+          border-top: 2px solid #346;
+          flex: 1;
+        }
         #map {
-          height: 400px;
+          flex: 2;
         }
       }
     </style>
@@ -66,22 +106,33 @@
     </header>
 
     <main>
-      <section id="mappa-sezione">
-        <h3>Mappa Interattiva</h3>
-        <p>Progetto della viabilità stradale e ferroviaria a nord di Parma, teso a favorire lo sviluppo economico, logistico ed infrastrutturale.</p>
+            <section id="mappa-sezione">
+        <h3>Mappa Interattiva Vettoriale</h3>
+        <p>Gli elementi del piano sono disegnati vettorialmente sopra una base cartografica neutra. Passa il mouse (o tocca) gli elementi colorati per visualizzarne il significato.</p>
         
         <div class="map-controls-info">
-          <strong>Istruzioni per l'accessibilità da tastiera:</strong>
-          <ul>
-            <li>Usa i tasti <strong>+</strong> e <strong>-</strong> per ingrandire e rimpicciolire la mappa.</li>
-            <li>Usa le <strong>frecce direzionali</strong> per spostarti all'interno della mappa.</li>
-            <li>Puoi anche navigare e fare zoom trascinando con il mouse o effettuando il pinch-to-zoom da smartphone.</li>
-          </ul>
+          <strong>Istruzioni per la navigazione:</strong> Usa i pulsanti di zoom in mappa o trascina/effettua pinch-to-zoom per esplorare il territorio.
         </div>
 
-        <div id="map" role="img" aria-label="Mappa interattiva per Parma Alta Capacità (Scenario 1). I dettagli testuali ed i elementi sono elencati nella legenda sottostante."></div>
+        <div id="map-container">
+          <div id="map" role="img" aria-label="Mappa vettoriale dello scenario."></div>
+          <div id="info-panel">
+            <h4>Dettagli Elemento Selezionato</h4>
+            <p id="info-help">Passa il mouse o seleziona un elemento colorato per leggere il significato strategico di questo vettore.</p>
+            <div id="info-content" style="display:none;">
+              <div class="property-item">
+                <strong>Significato Strategico:</strong>
+                <br /><span id="prop-meaning" style="font-weight: bold; color: #165;">-</span>
+              </div>
+              <div class="property-item">
+                <strong>Colore:</strong>
+                <br /><span id="prop-color-box" class="color-box"></span><span id="prop-color-text">-</span>
+              </div>
+            </div>
+          </div>
+        </div>
         
-        <button class="accessibility-btn" onclick="toggleContrast()">Attiva/Disattiva Alto Contrasto Mappa</button>
+        <button class="accessibility-btn" onclick="toggleContrast()">Attiva/Disattiva Alto Contrasto</button>
       </section>
 
       <hr />
@@ -97,34 +148,99 @@
       </section>
     </main>
 
-    <script>
-      // Real dimensions of the map image
-      var imgW = 6207;
-      var imgH = 7022;
-
-      // Initialize the Leaflet map with a simple coordinate system (pixels)
-      var map = L.map('map', {
-        crs: L.CRS.Simple,
-        minZoom: -4,
-        maxZoom: 2,
-        zoomSnap: 0.5,
-        zoomDelta: 0.5
-      });
-
-      // Set the map bounds based on the image size
-      var bounds = [[0, 0], [imgH, imgW]];
+        <script>
+      var width = 2979.2099609375;
+      var height = 3370.389892578125;
       
-      // Load the image overlay
-      var imageOverlay = L.imageOverlay('alta_capacita.png', bounds).addTo(map);
+      var map = L.map('map', {crs: L.CRS.Simple, minZoom: -3, maxZoom: 2, zoomSnap: 0.5, zoomDelta: 0.5});
 
-      // Center and fit the image within the window bounds
+      var bounds = [[0, 0], [height, width]];
       map.fitBounds(bounds);
       map.setMaxBounds(bounds);
 
-      // Function to toggle high contrast mode for visually impaired users
+      // Load base map
+      var baseOverlay = L.imageOverlay('../base_map.webp', bounds).addTo(map);
+
+      // Color meanings mapper
+      function getColorExplanation(colorStr) {
+        if (!colorStr) return "Elemento generico della pianificazione";
+        var match = colorStr.match(/\d+/g);
+        if (!match) return "Elemento generico della pianificazione";
+        var r = parseInt(match[0]);
+        var g = parseInt(match[1]);
+        var b = parseInt(match[2]);
+
+        if (g > 110 && r < 140 && b < 140) {
+          if (g > 180) return "Infrastruttura Verde e corridoi ecologici portanti (Parchi storici, cintura boscata)";
+          return "Transizione ecologica rurale e agricola, corridoi di biodiversità (RiMaP, cintura verde)";
+        }
+        if (b > 140 && r < 130) {
+          if (r < 60 && g > 110) return "Itinerari ciclopedonali e rete di mobilità dolce (in progetto o qualificazione)";
+          if (r > 70) return "Aree fluviali dei torrenti Parma e Baganza, canali e idrografia";
+          return "Assi e stazioni di trasporto su ferro (linee ferroviarie, TAV, Pontremolese)";
+        }
+        if (r > 140 && b < 140) {
+          if (g > 120) return "Nodi di interscambio modale (TPL, stazioni passeggeri, aree sosta)";
+          if (g < 80) return "Aree di Addensamento e Trasformazione Strategica (ambiti produttivi dismessi da rigenerare)";
+          return "Zone a precedenza pedonale, Zone 30, riqualificazione spazio pubblico di quartiere";
+        }
+        if (r > 110 && b > 110 && g < 100) {
+          return "Assi prioritari del Trasporto Pubblico Locale (linee TPL veloci, corsie preferenziali)";
+        }
+        return "Elemento di pianificazione territoriale";
+      }
+
+      // Load specific scenario vectors
+      fetch('vectors.geojson')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          L.geoJSON(data, {
+            style: function(feature) {
+              var col = feature.properties.stroke || feature.properties.fill || "#334466";
+              return {
+                fillColor: feature.properties.fill || "#334466",
+                fillOpacity: feature.properties.fill ? 0.65 : 0,
+                color: col,
+                weight: feature.properties.weight || 2,
+                opacity: 0.9
+              };
+            },
+            onEachFeature: function(feature, layer) {
+              layer.on({
+                mouseover: function(e) {
+                  var lay = e.target;
+                  lay.setStyle({
+                    fillOpacity: 0.9,
+                    weight: (feature.properties.weight || 2) + 2,
+                    color: '#ffcc00'
+                  });
+                  showInfo(feature.properties);
+                },
+                mouseout: function(e) {
+                  lay = e.target;
+                  lay.setStyle({
+                    fillOpacity: feature.properties.fill ? 0.65 : 0,
+                    color: feature.properties.stroke || feature.properties.fill || "#334466",
+                    weight: feature.properties.weight || 2
+                  });
+                }
+              });
+            }
+          }).addTo(map);
+        });
+
+      function showInfo(props) {
+        document.getElementById("info-help").style.display = "none";
+        document.getElementById("info-content").style.display = "block";
+        var col = props.fill || props.stroke || "#334466";
+        document.getElementById("prop-meaning").textContent = getColorExplanation(col);
+        document.getElementById("prop-color-text").textContent = col;
+        document.getElementById("prop-color-box").style.backgroundColor = col;
+      }
+
       var contrastActive = false;
       function toggleContrast() {
-        var imgEl = imageOverlay.getElement();
+        var imgEl = baseOverlay.getElement();
         if (!contrastActive) {
           imgEl.style.filter = "contrast(1.8) brightness(0.9) saturate(1.2)";
           contrastActive = true;
