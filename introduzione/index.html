@@ -1261,45 +1261,71 @@
         <button class="accessibility-btn" style="background-color: #346; color: white; border: none; padding: 8px 12px; font-size: 14px; cursor: pointer; border-radius: 4px; text-transform: uppercase;" onclick="toggleContrast()">Attiva/Disattiva Alto Contrasto Mappa</button>
 
         <script>
-          // Real dimensions of the page in PDF points
-          var imgW = 595.276;
-          var imgH = 841.89;
-
-          // Initialize the Leaflet map with a simple coordinate system (pixels)
+          // Initialize Leaflet map in standard web projection
           var map = L.map('map', {
-            crs: L.CRS.Simple,
-            minZoom: -1.5,
-            maxZoom: 3,
-            zoomSnap: 0.5,
-            zoomDelta: 0.5
+            center: [44.8015, 10.328],
+            zoom: 12,
+            minZoom: 10,
+            maxZoom: 18
           });
 
-          // Set the map bounds based on the image size
-          var bounds = [[0, 0], [imgH, imgW]];
+          // 1. Light background base map (CartoDB Light)
+          var light = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 20
+          });
+
+          // 2. OpenStreetMap Standard
+          var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+          });
+
+          // 3. Satellite Imagery (Esri)
+          var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{x}/{y}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+          });
+
+          // Set default base map
+          light.addTo(map);
+
+          // Georeferenced bounding box of the PDF page 31 map limits
+          var bounds = [[44.6216, 10.0901], [44.9361, 10.4974]];
+          var pdfOverlay = L.imageOverlay('limiti_territorio.webp', bounds, { opacity: 0.65 });
           
-          // Load the image overlay
-          var imageOverlay = L.imageOverlay('limiti_territorio.webp', bounds).addTo(map);
+          // Add PDF overlay by default
+          pdfOverlay.addTo(map);
 
-          // Center and fit the image within the window bounds
-          map.fitBounds(bounds);
-          map.setMaxBounds(bounds);
+          // Register base maps and overlays in layers control
+          var baseMaps = {
+            "Mappa Chiara (CartoDB)": light,
+            "OpenStreetMap": osm,
+            "Mappa Satellitare (Esri)": satellite
+          };
 
-          // Load the vectorial limits dynamically
-          fetch('limiti_tu.geojson')
+          var overlayMaps = {
+            "Carta PDF Originale (Georeferenziata)": pdfOverlay
+          };
+
+          L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
+
+          // Load the georeferenced vectorial limits
+          fetch('limiti_tu_georef.geojson')
             .then(function(res) { return res.json(); })
             .then(function(data) {
-              L.geoJSON(data, {
+              var geojsonLayer = L.geoJSON(data, {
                 style: function(feature) {
                   return {
                     fillColor: '#cc3322',
                     fillOpacity: 0.35,
                     color: '#cc3322',
-                    weight: 1.5,
-                    opacity: 0.8
+                    weight: 2.0,
+                    opacity: 0.9
                   };
                 },
                 onEachFeature: function(feature, layer) {
-                  layer.bindTooltip("Perimetro del Territorio Urbanizzato (TU)", { sticky: true });
+                  layer.bindTooltip("Perimetro del Territorio Urbanizzato (TU) al 2025", { sticky: true });
 
                   layer.on({
                     mouseover: function(e) {
@@ -1308,7 +1334,7 @@
                         fillColor: '#ffcc00',
                         fillOpacity: 0.6,
                         color: '#ff9900',
-                        weight: 2.5
+                        weight: 3.0
                       });
                       lay.bringToFront();
                     },
@@ -1318,19 +1344,23 @@
                         fillColor: '#cc3322',
                         fillOpacity: 0.35,
                         color: '#cc3322',
-                        weight: 1.5
+                        weight: 2.0
                       });
                     }
                   });
                 }
               }).addTo(map);
+
+              // Fit map bounds to the vector features
+              map.fitBounds(geojsonLayer.getBounds());
             })
-            .catch(function(err) { console.error("Error loading TU GeoJSON:", err); });
+            .catch(function(err) { console.error("Error loading georeferenced GeoJSON:", err); });
 
           // Function to toggle high contrast mode for visually impaired users
           var contrastActive = false;
           function toggleContrast() {
-            var imgEl = imageOverlay.getElement();
+            var imgEl = pdfOverlay.getElement();
+            if (!imgEl) return;
             if (!contrastActive) {
               imgEl.style.filter = "contrast(1.8) brightness(0.9) saturate(1.2)";
               contrastActive = true;
