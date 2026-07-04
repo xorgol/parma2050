@@ -1261,15 +1261,15 @@
         <button class="accessibility-btn" style="background-color: #346; color: white; border: none; padding: 8px 12px; font-size: 14px; cursor: pointer; border-radius: 4px; text-transform: uppercase;" onclick="toggleContrast()">Attiva/Disattiva Alto Contrasto Mappa</button>
 
         <script>
-          // Real dimensions of the map image (A4 portrait page at 150 DPI)
-          var imgW = 1241;
-          var imgH = 1754;
+          // Real dimensions of the page in PDF points
+          var imgW = 595.276;
+          var imgH = 841.89;
 
           // Initialize the Leaflet map with a simple coordinate system (pixels)
           var map = L.map('map', {
             crs: L.CRS.Simple,
-            minZoom: -3,
-            maxZoom: 1,
+            minZoom: -1.5,
+            maxZoom: 3,
             zoomSnap: 0.5,
             zoomDelta: 0.5
           });
@@ -1283,6 +1283,49 @@
           // Center and fit the image within the window bounds
           map.fitBounds(bounds);
           map.setMaxBounds(bounds);
+
+          // Load the vectorial limits dynamically
+          fetch('limiti_tu.geojson')
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+              L.geoJSON(data, {
+                style: function(feature) {
+                  return {
+                    fillColor: '#cc3322',
+                    fillOpacity: 0.35,
+                    color: '#cc3322',
+                    weight: 1.5,
+                    opacity: 0.8
+                  };
+                },
+                onEachFeature: function(feature, layer) {
+                  layer.bindTooltip("Perimetro del Territorio Urbanizzato (TU)", { sticky: true });
+
+                  layer.on({
+                    mouseover: function(e) {
+                      var lay = e.target;
+                      lay.setStyle({
+                        fillColor: '#ffcc00',
+                        fillOpacity: 0.6,
+                        color: '#ff9900',
+                        weight: 2.5
+                      });
+                      lay.bringToFront();
+                    },
+                    mouseout: function(e) {
+                      var lay = e.target;
+                      lay.setStyle({
+                        fillColor: '#cc3322',
+                        fillOpacity: 0.35,
+                        color: '#cc3322',
+                        weight: 1.5
+                      });
+                    }
+                  });
+                }
+              }).addTo(map);
+            })
+            .catch(function(err) { console.error("Error loading TU GeoJSON:", err); });
 
           // Function to toggle high contrast mode for visually impaired users
           var contrastActive = false;
