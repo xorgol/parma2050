@@ -1290,25 +1290,14 @@
           // Set default base map
           light.addTo(map);
 
-          // Georeferenced bounding box of the PDF page 31 map limits
-          var bounds = [[44.72984, 10.05956], [44.83585, 10.54692]];
-          var pdfOverlay = L.imageOverlay('limiti_territorio.webp', bounds, { opacity: 0.65 });
-          
-          // Add PDF overlay by default
-          pdfOverlay.addTo(map);
-
-          // Register base maps and overlays in layers control
+          // Register base maps in layers control
           var baseMaps = {
             "Mappa Chiara (CartoDB)": light,
             "OpenStreetMap": osm,
             "Mappa Satellitare (Esri)": satellite
           };
 
-          var overlayMaps = {
-            "Carta PDF Originale (Georeferenziata)": pdfOverlay
-          };
-
-          L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
+          L.control.layers(baseMaps, null, { collapsed: false }).addTo(map);
 
           // Load the georeferenced vectorial limits
           fetch('limiti_tu_georef.geojson')
@@ -1359,15 +1348,23 @@
           // Function to toggle high contrast mode for visually impaired users
           var contrastActive = false;
           function toggleContrast() {
-            var imgEl = pdfOverlay.getElement();
-            if (!imgEl) return;
-            if (!contrastActive) {
-              imgEl.style.filter = "contrast(1.8) brightness(0.9) saturate(1.2)";
-              contrastActive = true;
-            } else {
-              imgEl.style.filter = "none";
-              contrastActive = false;
-            }
+            var layers = [];
+            map.eachLayer(function(layer) {
+              if (layer instanceof L.TileLayer) {
+                layers.push(layer);
+              }
+            });
+            layers.forEach(function(layer) {
+              var container = layer.getContainer();
+              if (container) {
+                if (!contrastActive) {
+                  container.style.filter = "contrast(1.6) brightness(0.9) saturate(1.2)";
+                } else {
+                  container.style.filter = "none";
+                }
+              }
+            });
+            contrastActive = !contrastActive;
           }
         </script>
       </section>
