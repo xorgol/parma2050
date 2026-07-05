@@ -140,45 +140,45 @@
 <body>
   <header>
     <h1>Three-Point Affine Georeferencer</h1>
-    <div>Allineamento Geospaziale di Precisione</div>
+    <div>Precision Geospatial Alignment</div>
   </header>
 
   <div id="app-container">
     <!-- Left Pane: PDF Space Map -->
     <div class="map-pane">
       <div class="map-title">
-        <span>Mappa PDF (Coordinate Relative Simple CRS)</span>
-        <span style="color: #ff3333; font-size: 0.8rem;">Trascina i marker per posizionare i punti di controllo A, B, C</span>
+        <span>PDF Map (Relative Coordinates Simple CRS)</span>
+        <span style="color: #ff3333; font-size: 0.8rem;">Drag the markers to position control points A, B, C</span>
       </div>
       <div id="map-pdf" class="map-canvas"></div>
     </div>
 
     <!-- Center Control Panel -->
     <div id="control-panel">
-      <h3>Punti di Controllo (GCP)</h3>
+      <h3>Ground Control Points (GCP)</h3>
       
       <div class="point-indicator pt-a">
-        <strong>Punto A (Rosso)</strong>
+        <strong>Point A (Red)</strong>
         <div class="indicator-coords" id="coords-a">PDF: [0, 0]<br>OSM: [0, 0]</div>
       </div>
       
       <div class="point-indicator pt-b">
-        <strong>Punto B (Verde)</strong>
+        <strong>Point B (Green)</strong>
         <div class="indicator-coords" id="coords-b">PDF: [0, 0]<br>OSM: [0, 0]</div>
       </div>
       
       <div class="point-indicator pt-c">
-        <strong>Punto C (Blu)</strong>
+        <strong>Point C (Blue)</strong>
         <div class="indicator-coords" id="coords-c">PDF: [0, 0]<br>OSM: [0, 0]</div>
       </div>
 
-      <label for="geojson-upload">1. Carica GeoJSON PDF originale:</label>
+      <label for="geojson-upload">1. Upload original PDF GeoJSON:</label>
       <input type="file" id="geojson-upload" accept=".geojson,application/json" style="margin-bottom: 15px; color: #aab;" />
 
-      <label>Matrice di Trasformazione:</label>
-      <div class="matrix-display" id="matrix-output">Nessun punto calcolato</div>
+      <label>Transformation Matrix:</label>
+      <div class="matrix-display" id="matrix-output">No points calculated</div>
 
-      <button class="btn btn-success" id="btn-process" disabled>2. Georeferenzia e Scarica</button>
+      <button class="btn btn-success" id="btn-process" disabled>2. Georeference and Download</button>
       
       <label>Debug Logs:</label>
       <textarea id="log-console" readonly></textarea>
@@ -187,8 +187,8 @@
     <!-- Right Pane: OSM Map -->
     <div class="map-pane">
       <div class="map-title">
-        <span>Mappa Reale (OpenStreetMap / Satellite EPSG:3857)</span>
-        <span style="color: #33ff33; font-size: 0.8rem;">Posiziona i marker corrispondenti ai punti A, B, C reali</span>
+        <span>Real Map (OpenStreetMap / Satellite EPSG:3857)</span>
+        <span style="color: #33ff33; font-size: 0.8rem;">Position markers corresponding to real points A, B, C</span>
       </div>
       <div id="map-osm" class="map-canvas"></div>
     </div>
@@ -295,7 +295,7 @@
       // Cramer's rule determinant:
       var det = pA.lng * (pB.lat - pC.lat) - pA.lat * (pB.lng - pC.lng) + (pB.lng * pC.lat - pC.lng * pB.lat);
       if (Math.abs(det) < 1e-7) {
-        document.getElementById("matrix-output").textContent = "Errore: Punti allineati!";
+        document.getElementById("matrix-output").textContent = "Error: Collinear points!";
         return null;
       }
 
@@ -335,12 +335,12 @@
         reader.onload = function(event) {
           try {
             originalGeoJSON = JSON.parse(event.target.result);
-            logConsole("GeoJSON caricato con successo. " + originalGeoJSON.features.length + " elementi.");
+            logConsole("GeoJSON loaded successfully. " + originalGeoJSON.features.length + " elements.");
             document.getElementById("btn-process").disabled = false;
             // Force recalculation and preview
             calculateAffine();
           } catch(err) {
-            logConsole("Errore lettura JSON: " + err.message);
+            logConsole("JSON read error: " + err.message);
           }
         };
         reader.readAsText(file);
@@ -360,7 +360,7 @@
         document.body.appendChild(downloadAnchor);
         downloadAnchor.click();
         downloadAnchor.remove();
-        logConsole("GeoJSON georeferenziato generato e scaricato.");
+        logConsole("Georeferenced GeoJSON generated and downloaded.");
       });
     }
 
@@ -371,38 +371,46 @@
         return [lon, lat];
       }
 
-      var outFeatures = geojson.features.map(function(feat) {
-        var geom = feat.geometry;
+      function transformGeometry(geom) {
+        if (!geom) return null;
+        if (geom.type === "GeometryCollection") {
+          return {
+            type: "GeometryCollection",
+            geometries: geom.geometries.map(transformGeometry)
+          };
+        }
         var newCoords;
-
         if (geom.type === "Polygon") {
           newCoords = geom.coordinates.map(function(ring) {
-            return ring.map(function(pt) {
-              return project(pt[0], pt[1]);
-            });
+            return ring.map(function(pt) { return project(pt[0], pt[1]); });
           });
         } else if (geom.type === "LineString") {
           newCoords = geom.coordinates.map(function(pt) {
             return project(pt[0], pt[1]);
           });
+        } else if (geom.type === "MultiLineString") {
+          newCoords = geom.coordinates.map(function(line) {
+            return line.map(function(pt) { return project(pt[0], pt[1]); });
+          });
         } else if (geom.type === "MultiPolygon") {
           newCoords = geom.coordinates.map(function(poly) {
             return poly.map(function(ring) {
-              return ring.map(function(pt) {
-                return project(pt[0], pt[1]);
-              });
+              return ring.map(function(pt) { return project(pt[0], pt[1]); });
             });
           });
         } else if (geom.type === "Point") {
           newCoords = project(geom.coordinates[0], geom.coordinates[1]);
         }
+        return {
+          type: geom.type,
+          coordinates: newCoords
+        };
+      }
 
+      var outFeatures = geojson.features.map(function(feat) {
         return {
           type: "Feature",
-          geometry: {
-            type: geom.type,
-            coordinates: newCoords
-          },
+          geometry: transformGeometry(feat.geometry),
           properties: feat.properties
         };
       });

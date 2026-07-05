@@ -1306,8 +1306,7 @@
               var geojsonLayer = L.geoJSON(data, {
                 style: function(feature) {
                   return {
-                    fillColor: '#cc3322',
-                    fillOpacity: 0.35,
+                    fill: false,
                     color: '#cc3322',
                     weight: 2.0,
                     opacity: 0.9
@@ -1320,8 +1319,7 @@
                     mouseover: function(e) {
                       var lay = e.target;
                       lay.setStyle({
-                        fillColor: '#ffcc00',
-                        fillOpacity: 0.6,
+                        fill: false,
                         color: '#ff9900',
                         weight: 3.0
                       });
@@ -1330,8 +1328,7 @@
                     mouseout: function(e) {
                       var lay = e.target;
                       lay.setStyle({
-                        fillColor: '#cc3322',
-                        fillOpacity: 0.35,
+                        fill: false,
                         color: '#cc3322',
                         weight: 2.0
                       });
